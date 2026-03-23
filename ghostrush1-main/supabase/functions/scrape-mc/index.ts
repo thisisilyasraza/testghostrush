@@ -284,10 +284,7 @@ Deno.serve(async (req) => {
         const batchResults = await processBatch(mcNumbers);
         results.push(...batchResults);
         
-        // Small delay between batches to avoid rate limiting
-        if (batchEnd < endMc) {
-          await new Promise(resolve => setTimeout(resolve, 200));
-        }
+        // Small 
       }
       
       return new Response(
