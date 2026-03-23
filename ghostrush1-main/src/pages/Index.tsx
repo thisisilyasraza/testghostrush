@@ -23,45 +23,48 @@ const Index = () => {
     setProgress({ current: 0, total, found: 0 });
 
     try {
-      // Process in batches of 10 for concurrency (10x speed)
+
+
       const BATCH_SIZE = 10;
+      const CONCURRENT_BATCHES = 10;
+
       const scrapedResults: ScraperResult[] = [];
 
+      const allBatches: number[][] = [];
       for (let i = startMc; i <= endMc; i += BATCH_SIZE) {
         const batchEnd = Math.min(i + BATCH_SIZE - 1, endMc);
         const batchMcs: number[] = [];
-        for (let mc = i; mc <= batchEnd; mc++) {
-          batchMcs.push(mc);
-        }
+        for (let mc = i; mc <= batchEnd; mc++) batchMcs.push(mc);
+        allBatches.push(batchMcs);
+      }
 
-        const { data, error } = await supabase.functions.invoke('scrape-mc', {
-          body: { batchMcs }
-        });
+      for (let i = 0; i < allBatches.length; i += CONCURRENT_BATCHES) {
+        const concurrentSlice = allBatches.slice(i, i + CONCURRENT_BATCHES);
 
-        if (error) {
-          console.error(`Error scraping batch ${i}-${batchEnd}:`, error);
-        } else if (data?.success && data.data && Array.isArray(data.data)) {
-          // Add each result from the batch
-          for (const item of data.data) {
-            const freshResult: ScraperResult = {
-              mcNumber: item.mcNumber,
-              usdot: item.usdot,
-              phone: item.phone,
-              email: item.email,
-              status: item.status,
-            };
-            scrapedResults.push(freshResult);
+        const batchPromises = concurrentSlice.map(batchMcs =>
+          supabase.functions.invoke('scrape-mc', { body: { batchMcs } })
+        );
+
+        const batchResponses = await Promise.all(batchPromises);
+
+        for (const { data, error } of batchResponses) {
+          if (error) {
+            console.error('Batch error:', error);
+          } else if (data?.success && Array.isArray(data.data)) {
+            for (const item of data.data) {
+              scrapedResults.push({
+                mcNumber: item.mcNumber,
+                usdot: item.usdot,
+                phone: item.phone,
+                email: item.email,
+                status: item.status,
+              });
+            }
           }
         }
 
-        const currentProgress = Math.min(batchEnd - startMc + 1, total);
-        setProgress({
-          current: currentProgress,
-          total,
-          found: scrapedResults.length
-        });
-        
-        // Update results in real-time
+        const processed = Math.min((i + CONCURRENT_BATCHES) * BATCH_SIZE, total);
+        setProgress({ current: processed, total, found: scrapedResults.length });
         setResults([...scrapedResults]);
       }
 
