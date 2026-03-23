@@ -26,7 +26,7 @@ const Index = () => {
 
 
       const BATCH_SIZE = 10;
-      const CONCURRENT_BATCHES = 10;
+      const CONCURRENT_BATCHES = 20;
 
       const scrapedResults: ScraperResult[] = [];
 
