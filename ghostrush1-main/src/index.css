@@ -1,0 +1,186 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* GhostRush Design System - Ghost-themed modern scraper UI */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+@layer base {
+  :root {
+    /* Light Mode - Clean, professional with ghost accents */
+    --background: 210 20% 98%;
+    --foreground: 220 20% 10%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 220 20% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 20% 10%;
+
+    --primary: 174 72% 40%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 210 15% 93%;
+    --secondary-foreground: 220 20% 15%;
+
+    --muted: 210 15% 93%;
+    --muted-foreground: 220 10% 45%;
+
+    --accent: 174 60% 45%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 72% 55%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 210 15% 88%;
+    --input: 210 15% 88%;
+    --ring: 174 72% 40%;
+
+    --radius: 0.75rem;
+
+    /* Ghost-specific tokens */
+    --ghost-glow: 174 72% 50%;
+    --ghost-gradient-start: 174 72% 40%;
+    --ghost-gradient-end: 187 72% 45%;
+    --surface-elevated: 0 0% 100%;
+    --surface-sunken: 210 20% 96%;
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    /* Dark Mode - Sleek cyberpunk with ghost glow */
+    --background: 222 25% 8%;
+    --foreground: 210 20% 95%;
+
+    --card: 222 20% 12%;
+    --card-foreground: 210 20% 95%;
+
+    --popover: 222 20% 12%;
+    --popover-foreground: 210 20% 95%;
+
+    --primary: 174 72% 50%;
+    --primary-foreground: 222 25% 8%;
+
+    --secondary: 222 15% 18%;
+    --secondary-foreground: 210 20% 90%;
+
+    --muted: 222 15% 18%;
+    --muted-foreground: 210 15% 55%;
+
+    --accent: 174 65% 55%;
+    --accent-foreground: 222 25% 8%;
+
+    --destructive: 0 65% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 222 15% 20%;
+    --input: 222 15% 20%;
+    --ring: 174 72% 50%;
+
+    /* Ghost-specific tokens - dark mode */
+    --ghost-glow: 174 80% 55%;
+    --ghost-gradient-start: 174 72% 45%;
+    --ghost-gradient-end: 187 72% 50%;
+    --surface-elevated: 222 20% 14%;
+    --surface-sunken: 222 25% 6%;
+
+    --sidebar-background: 222 25% 10%;
+    --sidebar-foreground: 210 20% 90%;
+    --sidebar-primary: 174 72% 50%;
+    --sidebar-primary-foreground: 222 25% 8%;
+    --sidebar-accent: 222 15% 18%;
+    --sidebar-accent-foreground: 210 20% 90%;
+    --sidebar-border: 222 15% 20%;
+    --sidebar-ring: 174 72% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+
+  code, pre, .mono {
+    font-family: 'JetBrains Mono', monospace;
+  }
+}
+
+@layer components {
+  .ghost-glow {
+    box-shadow: 0 0 20px hsl(var(--ghost-glow) / 0.3),
+                0 0 40px hsl(var(--ghost-glow) / 0.1);
+  }
+
+  .ghost-glow-subtle {
+    box-shadow: 0 0 10px hsl(var(--ghost-glow) / 0.2);
+  }
+
+  .ghost-gradient {
+    background: linear-gradient(135deg, 
+      hsl(var(--ghost-gradient-start)), 
+      hsl(var(--ghost-gradient-end)));
+  }
+
+  .ghost-text-gradient {
+    background: linear-gradient(135deg, 
+      hsl(var(--ghost-gradient-start)), 
+      hsl(var(--ghost-gradient-end)));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .surface-elevated {
+    background-color: hsl(var(--surface-elevated));
+  }
+
+  .surface-sunken {
+    background-color: hsl(var(--surface-sunken));
+  }
+
+  .animate-pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% {
+      box-shadow: 0 0 15px hsl(var(--ghost-glow) / 0.3);
+    }
+    50% {
+      box-shadow: 0 0 30px hsl(var(--ghost-glow) / 0.5);
+    }
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .glass-card {
+    background: hsl(var(--card) / 0.8);
+    backdrop-filter: blur(12px);
+    border: 1px solid hsl(var(--border) / 0.5);
+  }
+}
