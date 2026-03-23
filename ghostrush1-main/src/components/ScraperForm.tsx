@@ -32,8 +32,8 @@ export function ScraperForm({ onStart, isLoading }: ScraperFormProps) {
       return;
     }
 
-    if (end - start > 1000) {
-      setError('Maximum range is 1001 MC numbers at a time');
+    if (end - start > 10001) {
+      setError('Maximum range is 10001 MC numbers at a time');
       return;
     }
 
